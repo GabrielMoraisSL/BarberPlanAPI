@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module'; // Verifique o caminho para o seu AppModule
+import { AppModule } from '../src/app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
+import express from 'express';
 import { INestApplication } from '@nestjs/common';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
@@ -9,7 +9,7 @@ let cachedApp: INestApplication;
 
 async function bootstrap() {
   if (!cachedApp) {
-    const server = express();
+    const server = express(); 
     const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
     await app.init();
@@ -18,10 +18,8 @@ async function bootstrap() {
   return cachedApp;
 }
 
-// Handler para a Vercel
-export default async function (req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   const app = await bootstrap();
-
-  const server = app.getHttpAdapter().getInstance() as express.Express;
-  server(req, res);
+  const server = app.getHttpAdapter().getInstance();
+  server(req, res); 
 }
