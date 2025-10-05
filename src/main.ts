@@ -4,10 +4,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
+import { Request, Response } from 'express';
 
 const server = express();
-
-import { Request, Response } from 'express';
 
 export default async (req: Request, res: Response): Promise<void> => {
   if (!global.app) {
