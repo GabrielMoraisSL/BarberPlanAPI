@@ -3,13 +3,16 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
-
-export const BASE_URL = process.env.BASE_URL;
+import express from 'express';
 
 const server = express();
 
-export default async (req: any, res: any) => {
+import { Request, Response } from 'express';
+
+export default async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   if (!global.app) {
     const app = await NestFactory.create(
       AppModule,
@@ -19,7 +22,7 @@ export default async (req: any, res: any) => {
     // Configuração CORS essencial para Vercel
     app.enableCors({
       origin: process.env.NODE_ENV === 'production' 
-        ? ['https://seudominio.com', 'https://www.seudominio.com'] 
+        ? process.env.ALLOWED_ORIGINS?.split(',') || true
         : true,
       credentials: true,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
@@ -33,7 +36,7 @@ export default async (req: any, res: any) => {
     });
 
     // Configuração Trust Proxy para Vercel
-    const expressApp = app.getHttpAdapter().getInstance();
+    const expressApp = app.getHttpAdapter().getInstance() as express.Application;
     expressApp.set('trust proxy', true);
 
     // Configuração Swagger
@@ -48,7 +51,7 @@ export default async (req: any, res: any) => {
 
     // Pipes globais
     app.useGlobalPipes(new ValidationPipe());
-
+  server(req, res);
     await app.init();
     global.app = app;
   }
