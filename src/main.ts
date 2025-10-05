@@ -2,43 +2,94 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { IncomingMessage, ServerResponse } from 'http';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import * as express from 'express';
 
 export const BASE_URL = process.env.BASE_URL;
 
-// O Nest expõe o express handler (requestListener), que é uma função
-type RequestHandler = (req: IncomingMessage, res: ServerResponse) => void;
+const server = express();
 
-let server: RequestHandler;
+export default async (req: any, res: any) => {
+  if (!global.app) {
+    const app = await NestFactory.create(
+      AppModule,
+      new ExpressAdapter(server),
+    );
 
-async function bootstrap(): Promise<RequestHandler> {
-  const app = await NestFactory.create(AppModule);
+    // Configuração CORS essencial para Vercel
+    app.enableCors({
+      origin: process.env.NODE_ENV === 'production' 
+        ? ['https://seudominio.com', 'https://www.seudominio.com'] 
+        : true,
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'Authorization',
+      ],
+    });
 
-  const config = new DocumentBuilder()
-    .setTitle('BarberPlan API')
-    .setDescription('The BarberPlan API description')
-    .setVersion('1.0')
-    .build();
+    // Configuração Trust Proxy para Vercel
+    const expressApp = app.getHttpAdapter().getInstance();
+    expressApp.set('trust proxy', true);
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('barberplan-dev-api-docs', app, document);
+    // Configuração Swagger
+    const config = new DocumentBuilder()
+      .setTitle('BarberPlan API')
+      .setDescription('The BarberPlan API description')
+      .setVersion('1.0')
+      .build();
 
-  app.useGlobalPipes(new ValidationPipe());
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('barberplan-dev-api-docs', app, document);
 
-  // Apenas inicializa, sem listen (a Vercel gerencia a porta)
-  await app.init();
+    // Pipes globais
+    app.useGlobalPipes(new ValidationPipe());
 
-  // Aqui sim é o express request handler
-  return app.getHttpAdapter().getInstance();
-}
-
-// 🔹 Handler exportado para Vercel
-export default async function handler(
-  req: IncomingMessage,
-  res: ServerResponse,
-) {
-  if (!server) {
-    server = await bootstrap();
+    await app.init();
+    global.app = app;
   }
+
   return server(req, res);
+};
+
+// Para desenvolvimento local
+if (require.main === module) {
+  async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+    
+    // Configuração CORS para desenvolvimento
+    app.enableCors({
+      origin: true,
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'Authorization',
+      ],
+    });
+
+    // Configuração Swagger para desenvolvimento
+    const config = new DocumentBuilder()
+      .setTitle('BarberPlan API')
+      .setDescription('The BarberPlan API description')
+      .setVersion('1.0')
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('barberplan-dev-api-docs', app, document);
+
+    app.useGlobalPipes(new ValidationPipe());
+
+    await app.listen(3000);
+    console.log('BarberPlan API rodando em http://localhost:3000');
+    console.log('Swagger disponível em http://localhost:3000/barberplan-dev-api-docs');
+  }
+  bootstrap();
 }
