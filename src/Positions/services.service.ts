@@ -4,7 +4,7 @@ import {
   CreatePositionsDTO,
   GetAllPositionsDTO,
   PatchPositionsDTO,
-} from 'src/dtos/Positions';
+} from '../dtos/Positions';
 import { Repository } from 'typeorm';
 import { Positions } from '../entities';
 

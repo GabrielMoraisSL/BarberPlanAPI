@@ -6,7 +6,7 @@ import {
   GetAllBarbershopsDTO,
   PatchBarbershopsDTO,
 } from 'src/dtos/Barbershops';
-import { Barbershops } from 'src/entities/Barbershops';
+import { Barbershops } from '../entities/Barbershops';
 import { Repository } from 'typeorm';
 
 @Injectable()

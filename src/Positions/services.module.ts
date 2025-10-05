@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Positions } from 'src/entities';
+import { Positions } from '../entities';
 import { PositionsController } from './services.controller';
 import { PositionsService } from './services.service';
 

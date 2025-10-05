@@ -4,7 +4,7 @@ import {
   CreatePositionsDTO,
   GetAllPositionsDTO,
   PatchPositionsDTO,
-} from 'src/dtos/Positions';
+} from '../dtos/Positions';
 import { PositionsService } from './services.service';
 
 @ApiTags('positions')

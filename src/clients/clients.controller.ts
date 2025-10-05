@@ -14,7 +14,7 @@ import {
   FindOneClientsDTO,
   GetAllClientsDTO,
   PatchClientsDTO,
-} from 'src/dtos/Clients';
+} from '../dtos/Clients';
 import { ClientsService } from './clients.service';
 
 @ApiTags('clients')

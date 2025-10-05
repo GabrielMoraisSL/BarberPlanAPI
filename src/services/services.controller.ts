@@ -14,7 +14,7 @@ import {
   FindOneServicesDTO,
   GetAllServicesDTO,
   PatchServicesDTO,
-} from 'src/dtos/Services';
+} from '../dtos/Services';
 import { ServicesService } from './services.service';
 
 @ApiTags('services')

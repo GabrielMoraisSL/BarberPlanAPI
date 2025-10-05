@@ -6,7 +6,7 @@ import {
   FindOneClientsDTO,
   GetAllClientsDTO,
   PatchClientsDTO,
-} from 'src/dtos/Clients';
+} from '../dtos/Clients';
 import { Repository } from 'typeorm';
 import { Clients } from '../entities';
 

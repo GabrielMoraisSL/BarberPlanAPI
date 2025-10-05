@@ -6,7 +6,7 @@ import {
   GetAllBenefictsDTO,
   PatchBenefictsDTO,
 } from 'src/dtos/Beneficts';
-import { Beneficts } from 'src/entities';
+import { Beneficts } from '../entities';
 import { Repository } from 'typeorm';
 
 @Injectable()

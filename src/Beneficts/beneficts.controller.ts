@@ -14,7 +14,7 @@ import {
   FindOneBenefictsDTO,
   GetAllBenefictsDTO,
   PatchBenefictsDTO,
-} from 'src/dtos/Beneficts';
+} from '../dtos/Beneficts';
 import { BenefictsService } from './beneficts.service';
 
 @ApiTags('beneficts')

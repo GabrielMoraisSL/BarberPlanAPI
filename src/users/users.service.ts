@@ -6,7 +6,7 @@ import {
   FindOneUsersDTO,
   GetAllUsersDTO,
   PatchUsersDTO,
-} from 'src/dtos/Users';
+} from '../dtos/Users';
 import { Repository } from 'typeorm';
 import { Users } from '../entities';
 

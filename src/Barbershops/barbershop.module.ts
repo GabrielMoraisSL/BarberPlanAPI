@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Barbershops } from 'src/entities/Barbershops';
+import { Barbershops } from '../entities/Barbershops';
 import { BarbershopController } from './barbershop.controller';
 import { BarbershopsService } from './barbershop.service';
 

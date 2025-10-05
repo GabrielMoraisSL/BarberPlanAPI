@@ -14,13 +14,13 @@ import {
   FindOneBarbershopsDTO,
   GetAllBarbershopsDTO,
   PatchBarbershopsDTO,
-} from 'src/dtos/Barbershops';
+} from '../dtos/Barbershops';
 import { BarbershopsService } from './barbershop.service';
 
 @ApiTags('barbershop')
 @Controller('barbershop')
 export class BarbershopController {
-  constructor(private readonly barbershopService: BarbershopsService) {}
+  constructor(private readonly barbershopService: BarbershopsService) { }
 
   @Get('findAll')
   @ApiOperation({ summary: 'List all barbershops' })
